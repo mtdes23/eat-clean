@@ -5,7 +5,7 @@
         <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-500 mb-4 tracking-tight">
           Eat Clean Menu
         </h1>
-        <p class="text-zinc-400 text-lg max-w-xl">
+        <p class="text-zinc-400 text-base max-w-xl">
           Thực đơn eat clean ngẫu nhiên nguyên tuần siêu ngon và đủ dinh dưỡng,<br>
           Nhấp vào từng món ăn để xem công thức, giúp chị em luôn rạng rỡ! ✨
         </p>
@@ -16,7 +16,7 @@
       </button>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 relative z-10">
       <DayCard 
         v-for="(day, index) in weekPlan" 
         :key="day.day" 
