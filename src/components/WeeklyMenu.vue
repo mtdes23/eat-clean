@@ -6,7 +6,8 @@
           Eat Clean Menu
         </h1>
         <p class="text-zinc-400 text-lg max-w-xl">
-          Thực đơn eat clean ngẫu nhiên nguyên tuần siêu ngon và đủ dinh dưỡng, nhấp vào món ăn đó sẽ có cách làm giúp chị em luôn rạng rỡ! ✨
+          Thực đơn eat clean ngẫu nhiên nguyên tuần siêu ngon và đủ dinh dưỡng,<br>
+          Nhấp vào từng món ăn để xem công thức, giúp chị em luôn rạng rỡ! ✨
         </p>
       </div>
       <button @click="generateNewWeek" class="glass-button flex items-center gap-2 px-6 py-3 rounded-2xl font-medium text-white group cursor-pointer hover:border-white/40">
