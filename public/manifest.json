@@ -1,0 +1,20 @@
+{
+  "name": "Eat Clean Menu",
+  "short_name": "EatClean",
+  "description": "Thực đơn eat clean ngẫu nhiên nguyên tuần, xem công thức chi tiết",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["food", "health", "lifestyle"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,5 +1,7 @@
 <template>
-  <div class="w-full max-w-7xl mx-auto py-6 md:py-10 px-3 sm:px-6 lg:px-8 relative">
+  <div class="w-full max-w-7xl mx-auto py-6 md:py-10 px-3 sm:px-6 lg:px-8 relative"
+    @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd"
+    @touchcancel="onTouchEnd">
     <div ref="captureRef">
       <div class="flex flex-col md:flex-row justify-between items-center mb-8 md:mb-10 gap-5 relative z-10">
         <div class="text-center md:text-left">
@@ -62,7 +64,7 @@
           :key="day.day + '-' + (day.breakfast?.id || index)"
           :day-data="day"
           class="animate-fade-up"
-          :style="{ animationDelay: index * 0.08 + 's', animationFillMode: 'backwards' }"
+          :style="{ animationDelay: index * 0.06 + 's', animationFillMode: 'backwards' }"
           @refresh-day="refreshDay(index)"
           @refresh-meal="(mealType) => refreshMeal(index, mealType)"
         />
@@ -89,6 +91,15 @@
         <ChevronUp class="w-[22px] h-[22px]" />
       </button>
     </Transition>
+
+    <Transition name="pull">
+      <div v-if="pulling" class="fixed top-0 left-0 right-0 z-50 flex items-center justify-center h-20 pointer-events-none" data-html2canvas-ignore>
+        <div class="glass-card-strong rounded-full px-5 py-2 shadow-2xl flex items-center gap-3" :style="{ opacity: pullProgress }">
+          <RefreshCcw class="w-4 h-4 text-white transition-transform duration-300" :class="{ 'animate-spin': pullReady }" />
+          <span class="text-xs text-zinc-300">{{ pullReady ? 'Thả để làm mới' : 'Kéo xuống để làm mới' }}</span>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -100,10 +111,16 @@ import { RefreshCcw, Download, Flame, CheckCircle, ChevronUp } from 'lucide-vue-
 import * as htmlToImage from 'html-to-image';
 
 const WEEK_TARGET = 8400;
+const PULL_THRESHOLD = 60;
 const weekPlan = ref([]);
 const captureRef = ref(null);
 const toasts = ref([]);
 const showScrollTop = ref(false);
+const pulling = ref(false);
+const pullProgress = ref(0);
+const pullReady = ref(false);
+let pullStartY = 0;
+let pullCurrentY = 0;
 
 const totalWeekCalories = computed(() =>
   weekPlan.value.reduce((sum, day) =>
@@ -124,17 +141,14 @@ const totalTypeCalories = computed(() => {
 const showToast = (message, type = 'success') => {
   const id = Date.now();
   toasts.value.push({ id, message, type });
-  setTimeout(() => {
-    toasts.value = toasts.value.filter(t => t.id !== id);
-  }, 2800);
+  setTimeout(() => toasts.value = toasts.value.filter(t => t.id !== id), 2800);
 };
 
 const downloadImage = async () => {
   if (!captureRef.value) return;
   try {
     const dataUrl = await htmlToImage.toPng(captureRef.value, {
-      backgroundColor: '#09090b',
-      pixelRatio: 2,
+      backgroundColor: '#09090b', pixelRatio: 2,
       filter: (node) => !(node.hasAttribute && node.hasAttribute('data-html2canvas-ignore'))
     });
     const link = document.createElement('a');
@@ -142,9 +156,7 @@ const downloadImage = async () => {
     link.href = dataUrl;
     link.click();
     showToast('Đã lưu ảnh thành công!');
-  } catch {
-    showToast('Lỗi khi lưu ảnh');
-  }
+  } catch { showToast('Lỗi khi lưu ảnh'); }
 };
 
 const generateNewWeek = () => {
@@ -162,34 +174,46 @@ const refreshDay = (dayIndex) => {
 };
 
 const mealDataMap = { breakfast: breakfasts, lunch: lunches, dinner: dinners };
-
 const refreshMeal = (dayIndex, mealType) => {
   const currentMealId = weekPlan.value[dayIndex][mealType].id;
   weekPlan.value[dayIndex][mealType] = getRandomItem(mealDataMap[mealType], currentMealId);
 };
 
-const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
+const onTouchStart = (e) => {
+  if (window.scrollY > 0) return;
+  pullStartY = e.touches[0].clientY;
+  pulling.value = true;
+  pullReady.value = false;
 };
 
-const handleScroll = () => {
-  showScrollTop.value = window.scrollY > 600;
+const onTouchMove = (e) => {
+  if (!pulling.value) return;
+  pullCurrentY = e.touches[0].clientY;
+  const dist = Math.max(0, (pullCurrentY - pullStartY) * 0.4);
+  pullProgress.value = Math.min(dist / PULL_THRESHOLD, 1);
+  pullReady.value = dist >= PULL_THRESHOLD;
 };
+
+const onTouchEnd = () => {
+  if (!pulling.value) return;
+  if (pullReady.value) generateNewWeek();
+  pulling.value = false;
+  pullProgress.value = 0;
+  pullReady.value = false;
+};
+
+const handleScroll = () => { showScrollTop.value = window.scrollY > 600; };
 
 onMounted(() => {
   const savedMenu = localStorage.getItem('eatCleanWeeklyMenu');
-  if (savedMenu) {
-    try { weekPlan.value = JSON.parse(savedMenu); }
-    catch { generateNewWeek(); }
-  } else {
-    generateNewWeek();
-  }
+  if (savedMenu) { try { weekPlan.value = JSON.parse(savedMenu); } catch { generateNewWeek(); } }
+  else { generateNewWeek(); }
   window.addEventListener('scroll', handleScroll, { passive: true });
 });
 
-onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
+onBeforeUnmount(() => window.removeEventListener('scroll', handleScroll));
 
 watch(weekPlan, (newVal) => {
   localStorage.setItem('eatCleanWeeklyMenu', JSON.stringify(newVal));
@@ -199,17 +223,12 @@ watch(weekPlan, (newVal) => {
 <style scoped>
 .toast-enter-active { animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .toast-leave-active { animation: slideOut 0.25s ease forwards; }
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(24px) scale(0.95); }
-  to { opacity: 1; transform: translateX(0) scale(1); }
-}
-@keyframes slideOut {
-  to { opacity: 0; transform: translateX(24px) scale(0.95); }
-}
+@keyframes slideIn { from { opacity: 0; transform: translateX(24px) scale(0.95); } to { opacity: 1; transform: translateX(0) scale(1); } }
+@keyframes slideOut { to { opacity: 0; transform: translateX(24px) scale(0.95); } }
 .fab-enter-active { animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 .fab-leave-active { animation: scaleIn 0.2s ease reverse; }
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
-}
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+.pull-enter-active { animation: fadeIn 0.2s ease; }
+.pull-leave-active { animation: fadeIn 0.15s ease reverse; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 </style>
