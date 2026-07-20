@@ -1,87 +1,120 @@
 <template>
-  <div class="w-full max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-    <button @click="$router.push('/')" class="glass-button flex items-center gap-2 px-4 py-2 rounded-xl text-zinc-300 hover:text-white mb-8 group transition-all">
-      <ArrowLeft class="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-      Quay lại Thực Đơn
+  <div class="w-full min-h-screen max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 relative">
+    <button @click="$router.push('/')" class="glass-button flex items-center gap-2 px-4 py-2 rounded-xl text-zinc-400 hover:text-white mb-8 group transition-all cursor-pointer">
+      <ArrowLeft class="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+      Quay lại
     </button>
-    
-    <div class="glass-card rounded-3xl p-8 relative overflow-hidden group mb-8">
-      <div class="light-sweep hidden group-hover:block"></div>
-      
-      <div class="relative z-20">
-        <div class="flex items-center gap-2 mb-4">
-          <span class="px-3 py-1 bg-white/10 rounded-full text-xs font-medium text-zinc-300 uppercase tracking-widest border border-white/10">
-            Chi tiết Món ăn
-          </span>
-          <span class="px-3 py-1 bg-orange-500/20 text-orange-400 rounded-full text-xs font-medium border border-orange-500/20 flex items-center gap-1">
-            <Flame class="w-3 h-3" /> {{ meal?.calories || 0 }} kcal
-          </span>
-        </div>
-        
-        <h1 class="text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-400 mb-6 tracking-tight">
-          {{ meal?.name || 'Món này không tồn tại 🤔' }}
-        </h1>
-        
-        <div v-if="meal" class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
-          <div>
-            <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-              <ShoppingBasket class="w-5 h-5 text-pink-400" /> Nguyên Liệu (1 Khẩu phần)
-            </h3>
-            <ul class="space-y-3">
-              <li v-for="(item, idx) in recipe?.ingredients || defaultRecipe.ingredients" :key="idx" class="flex gap-3 text-zinc-300 p-3 bg-white/5 rounded-xl border border-white/5 relative overflow-hidden group/li hover:bg-white/10 transition-colors">
-                <CheckCircle class="w-5 h-5 text-green-400 shrink-0 mt-0.5" />
-                <span>{{ item }}</span>
-              </li>
-            </ul>
+
+    <div v-if="!meal" class="glass-card rounded-3xl p-12 text-center">
+      <p class="text-zinc-400 text-lg">Món này không tồn tại 🤔</p>
+    </div>
+
+    <Transition v-else name="detail" mode="out-in">
+      <div class="glass-card rounded-3xl p-6 md:p-8 relative overflow-hidden" key="detail">
+        <div class="absolute top-0 right-0 w-48 h-48 opacity-[0.04] rounded-full blur-3xl pointer-events-none" :style="{ background: mealTypeColor }"></div>
+
+        <div class="relative z-20">
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span v-if="mealTypeBadge" class="px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest border" :class="mealTypeBadge.class">
+              {{ mealTypeBadge.label }}
+            </span>
+            <span class="px-3 py-1 rounded-full text-[10px] font-semibold border flex items-center gap-1" :style="{ borderColor: mealTypeColor + '40', color: mealTypeColor, background: mealTypeColor + '15' }">
+              <Flame class="w-3 h-3" /> {{ meal.calories }} kcal
+            </span>
           </div>
-          
-          <div>
-            <h3 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-              <ChefHat class="w-5 h-5 text-blue-400" /> Cách Làm
-            </h3>
-            <div class="space-y-4">
-              <div v-for="(step, idx) in recipe?.steps || defaultRecipe.steps" :key="idx" class="flex gap-4">
-                <div class="flex flex-col items-center">
-                  <div class="w-8 h-8 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white font-bold text-sm shrink-0">
-                    {{ idx + 1 }}
+
+          <h1 class="text-2xl md:text-4xl font-bold text-white mb-3 tracking-tight leading-tight">
+            {{ meal.name }}
+          </h1>
+
+          <p class="text-xs text-zinc-500 mb-8 flex items-center gap-1">
+            <Clock class="w-3 h-3" /> Khoảng 15-20 phút &middot; 
+            <Award class="w-3 h-3 ml-1" /> Dễ
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+            <div>
+              <h3 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                <ShoppingBasket class="w-4 h-4" :style="{ color: mealTypeColor }" /> Nguyên Liệu <span class="text-zinc-500 font-normal text-xs">(1 khẩu phần)</span>
+              </h3>
+              <ul class="space-y-2">
+                <li v-for="(item, idx) in recipe?.ingredients || defaultRecipe.ingredients" :key="'ing-'+idx"
+                  :class="['flex gap-3 text-zinc-300 p-3 rounded-xl border border-white/5 transition-all duration-300 cursor-pointer hover:bg-white/5', checkedIngredients.has(idx) ? 'bg-white/5' : 'bg-white/[0.02]']"
+                  @click="toggleIngredient(idx)">
+                  <div :class="['w-5 h-5 rounded-md border flex items-center justify-center shrink-0 mt-0.5 transition-all duration-300', checkedIngredients.has(idx) ? 'text-white' : 'border-white/20']"
+                    :style="checkedIngredients.has(idx) ? { background: mealTypeColor, borderColor: mealTypeColor } : {}">
+                    <Check v-if="checkedIngredients.has(idx)" class="w-3 h-3" />
                   </div>
-                  <div v-if="idx !== (recipe?.steps?.length || defaultRecipe.steps.length) - 1" class="w-px h-full bg-white/10 my-2"></div>
-                </div>
-                <div class="pt-1 pb-4">
-                  <p class="text-zinc-300 leading-relaxed">{{ step }}</p>
+                  <span :class="['leading-relaxed text-sm transition-all duration-300', checkedIngredients.has(idx) ? 'line-through text-zinc-600' : '']">{{ item }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                <ChefHat class="w-4 h-4" :style="{ color: mealTypeColor }" /> Cách Làm
+              </h3>
+              <div class="space-y-5">
+                <div v-for="(step, idx) in recipe?.steps || defaultRecipe.steps" :key="'step-'+idx" class="flex gap-4">
+                  <div class="flex flex-col items-center">
+                    <div class="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 border transition-all duration-300"
+                      :style="currentStep >= idx ? { background: mealTypeColor, borderColor: mealTypeColor } : { background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.15)' }">
+                      {{ idx + 1 }}
+                    </div>
+                    <div v-if="idx < (recipe?.steps || defaultRecipe.steps).length - 1"
+                      class="w-px flex-1 my-1.5 transition-all duration-500"
+                      :style="{ background: currentStep > idx ? mealTypeColor + '60' : 'rgba(255,255,255,0.08)' }"></div>
+                  </div>
+                  <div class="pt-0.5 pb-2">
+                    <p class="text-zinc-300 text-sm leading-relaxed" @click="currentStep = idx">{{ step }}</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    
+    </Transition>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { breakfasts, lunches, dinners } from '../data/meals';
 import { recipes } from '../data/recipes';
-import { ArrowLeft, Flame, ShoppingBasket, ChefHat, CheckCircle } from 'lucide-vue-next';
+import { ArrowLeft, Flame, ShoppingBasket, ChefHat, Check, Clock, Award } from 'lucide-vue-next';
 
-const props = defineProps({
-  id: {
-    type: String,
-    required: true
-  }
-});
+const props = defineProps({ id: { type: String, required: true } });
 
 const allMeals = [...breakfasts, ...lunches, ...dinners];
+const checkedIngredients = ref(new Set());
+const currentStep = ref(-1);
 
-const meal = computed(() => {
-  return allMeals.find(m => m.id === props.id);
+const meal = computed(() => allMeals.find(m => m.id === props.id));
+const recipe = computed(() => recipes[props.id] || null);
+
+const mealTypeColor = computed(() => {
+  const id = props.id;
+  if (id?.startsWith('b')) return '#f59e0b';
+  if (id?.startsWith('l')) return '#10b981';
+  if (id?.startsWith('d')) return '#8b5cf6';
+  return '#ffffff';
 });
 
-const recipe = computed(() => {
-  return recipes[props.id] || null;
+const mealTypeBadge = computed(() => {
+  const id = props.id;
+  if (id?.startsWith('b')) return { label: 'Bữa Sáng', class: 'text-amber-400 border-amber-400/30 bg-amber-400/10' };
+  if (id?.startsWith('l')) return { label: 'Bữa Trưa', class: 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' };
+  if (id?.startsWith('d')) return { label: 'Bữa Tối', class: 'text-violet-400 border-violet-400/30 bg-violet-400/10' };
+  return null;
 });
+
+const toggleIngredient = (idx) => {
+  const next = new Set(checkedIngredients.value);
+  if (next.has(idx)) next.delete(idx);
+  else next.add(idx);
+  checkedIngredients.value = next;
+};
 
 const defaultRecipe = {
   ingredients: [
@@ -94,7 +127,16 @@ const defaultRecipe = {
     'Sơ chế sạch các loại nguyên liệu và rau củ.',
     'Chế biến thành phần protein (áp chảo, luộc hoặc nướng) với một ít dầu oliu và gia vị nhạt.',
     'Rau củ luộc hoặc trộn salad kèm với nước xốt healthy (dầu dấm/mè rang).',
-    'Trang trí ra đĩa thật đẹp mắt, chị em nhớ chụp ảnh check-in sống ảo nhé! 📸'
+    'Trang trí ra đĩa thật đẹp mắt và thưởng thức!'
   ]
 };
 </script>
+
+<style scoped>
+.detail-enter-active { animation: fadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.detail-leave-active { animation: fadeUp 0.2s ease reverse; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
