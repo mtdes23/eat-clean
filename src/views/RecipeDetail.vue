@@ -88,7 +88,7 @@
 import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { breakfasts, lunches, dinners } from '../data/meals'
-import recipes from '../data/recipes'
+import { recipes } from '../data/recipes'
 import { ArrowLeft, Flame, Clock, Users, FileText, ListOrdered, Check } from 'lucide-vue-next'
 
 const route = useRoute()
