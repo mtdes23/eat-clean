@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -39,12 +39,11 @@ router.beforeEach((to, from) => {
 .slide-right-enter-active,
 .slide-right-leave-active {
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  position: absolute; width: 100%;
 }
-.slide-left-enter-from { opacity: 0; transform: translateX(30px); }
-.slide-left-leave-to { opacity: 0; transform: translateX(-30px); }
-.slide-right-enter-from { opacity: 0; transform: translateX(-30px); }
-.slide-right-leave-to { opacity: 0; transform: translateX(30px); }
+.slide-left-enter-from { opacity: 0; transform: translateX(40px); }
+.slide-left-leave-to { opacity: 0; transform: translateX(-20px); }
+.slide-right-enter-from { opacity: 0; transform: translateX(-20px); }
+.slide-right-leave-to { opacity: 0; transform: translateX(40px); }
 
 .page-enter-active,
 .page-leave-active {

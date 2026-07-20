@@ -15,11 +15,11 @@
         <div class="flex flex-row gap-2.5 w-full sm:w-auto" data-html2canvas-ignore>
           <button @click="downloadImage" class="glass-button flex items-center justify-center gap-2 px-4 py-3 md:px-5 md:py-2.5 rounded-xl md:rounded-2xl text-sm font-medium text-white cursor-pointer active:scale-95 flex-1 sm:flex-initial">
             <Download class="w-[18px] h-[18px]" />
-            <span class="hidden xs:inline">Lưu Ảnh</span>
+            <span class="max-sm:hidden sm:inline">Lưu Ảnh</span>
           </button>
           <button @click="generateNewWeek" class="glass-button flex items-center justify-center gap-2 px-4 py-3 md:px-5 md:py-2.5 rounded-xl md:rounded-2xl text-sm font-medium text-white cursor-pointer active:scale-95 flex-1 sm:flex-initial">
             <RefreshCcw class="w-[18px] h-[18px]" />
-            <span class="hidden xs:inline">Đổi Tuần</span>
+            <span class="max-sm:hidden sm:inline">Đổi Tuần</span>
           </button>
         </div>
       </div>
