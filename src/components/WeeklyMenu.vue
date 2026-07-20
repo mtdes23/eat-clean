@@ -1,62 +1,62 @@
 <template>
-  <div class="w-full max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8 relative">
+  <div class="w-full max-w-7xl mx-auto py-6 md:py-10 px-3 sm:px-6 lg:px-8 relative">
     <div ref="captureRef">
-      <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6 relative z-10">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-8 md:mb-10 gap-5 relative z-10">
         <div class="text-center md:text-left">
-          <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-500 mb-3 tracking-tight">
+          <h1 class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-zinc-500 mb-2 tracking-tight">
             Eat Clean Menu
           </h1>
-          <p class="text-zinc-500 text-sm max-w-xl">
+          <p class="text-zinc-500 text-xs md:text-sm max-w-xl">
             Thực đơn eat clean ngẫu nhiên nguyên tuần &mdash; nhấp vào món để xem công thức
           </p>
         </div>
-        <div class="flex flex-col sm:flex-row gap-3" data-html2canvas-ignore>
-          <button @click="downloadImage" class="glass-button flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-medium text-white group cursor-pointer hover:border-white/40">
-            <Download class="w-4 h-4 group-hover:-translate-y-0.5 transition-transform duration-300" />
-            Lưu Ảnh
+        <div class="flex flex-row gap-2.5 w-full sm:w-auto" data-html2canvas-ignore>
+          <button @click="downloadImage" class="glass-button flex items-center justify-center gap-2 px-4 py-3 md:px-5 md:py-2.5 rounded-xl md:rounded-2xl text-sm font-medium text-white cursor-pointer active:scale-95 flex-1 sm:flex-initial">
+            <Download class="w-[18px] h-[18px]" />
+            <span class="hidden xs:inline">Lưu Ảnh</span>
           </button>
-          <button @click="generateNewWeek" class="glass-button flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-medium text-white group cursor-pointer hover:border-white/40">
-            <RefreshCcw class="w-4 h-4 group-hover:-rotate-180 transition-transform duration-700" />
-            Đổi Cả Tuần
+          <button @click="generateNewWeek" class="glass-button flex items-center justify-center gap-2 px-4 py-3 md:px-5 md:py-2.5 rounded-xl md:rounded-2xl text-sm font-medium text-white cursor-pointer active:scale-95 flex-1 sm:flex-initial">
+            <RefreshCcw class="w-[18px] h-[18px]" />
+            <span class="hidden xs:inline">Đổi Tuần</span>
           </button>
         </div>
       </div>
 
-      <div class="glass-card-strong rounded-3xl p-5 mb-8 relative z-10" data-html2canvas-ignore>
-        <div class="flex items-center justify-between flex-wrap gap-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 via-emerald-400 to-violet-400 flex items-center justify-center">
+      <div class="glass-card-strong rounded-2xl md:rounded-3xl p-4 md:p-5 mb-6 md:mb-8 relative z-10" data-html2canvas-ignore>
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <div class="w-10 h-10 rounded-xl md:rounded-2xl bg-gradient-to-br from-amber-400 via-emerald-400 to-violet-400 flex items-center justify-center shrink-0">
               <Flame class="w-5 h-5 text-white" />
             </div>
             <div>
-              <p class="text-xs text-zinc-500 font-medium uppercase tracking-wider">Tuần này</p>
-              <p class="text-2xl font-bold tabular-nums">{{ totalWeekCalories }} <span class="text-sm font-normal text-zinc-400">kcal</span></p>
+              <p class="text-[10px] md:text-xs text-zinc-500 font-medium uppercase tracking-wider">Tuần này</p>
+              <p class="text-xl md:text-2xl font-bold tabular-nums">{{ totalWeekCalories }} <span class="text-xs md:text-sm font-normal text-zinc-400">kcal</span></p>
             </div>
           </div>
-          <div class="flex flex-wrap gap-3 text-xs">
-            <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5">
-              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-              <span class="text-zinc-400">Sáng</span>
-              <span class="text-white font-semibold tabular-nums">{{ totalTypeCalories.breakfast }}</span>
+          <div class="flex gap-2 w-full sm:w-auto">
+            <div class="flex-1 sm:flex-initial flex items-center gap-1.5 px-2.5 md:px-3 py-2 rounded-xl bg-white/5 min-w-0">
+              <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+              <span class="text-zinc-500 text-[11px] md:text-xs">S</span>
+              <span class="text-white font-semibold tabular-nums text-xs md:text-sm">{{ totalTypeCalories.breakfast }}</span>
             </div>
-            <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5">
-              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-              <span class="text-zinc-400">Trưa</span>
-              <span class="text-white font-semibold tabular-nums">{{ totalTypeCalories.lunch }}</span>
+            <div class="flex-1 sm:flex-initial flex items-center gap-1.5 px-2.5 md:px-3 py-2 rounded-xl bg-white/5 min-w-0">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0"></span>
+              <span class="text-zinc-500 text-[11px] md:text-xs">T</span>
+              <span class="text-white font-semibold tabular-nums text-xs md:text-sm">{{ totalTypeCalories.lunch }}</span>
             </div>
-            <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5">
-              <span class="w-2 h-2 rounded-full bg-violet-400"></span>
-              <span class="text-zinc-400">Tối</span>
-              <span class="text-white font-semibold tabular-nums">{{ totalTypeCalories.dinner }}</span>
+            <div class="flex-1 sm:flex-initial flex items-center gap-1.5 px-2.5 md:px-3 py-2 rounded-xl bg-white/5 min-w-0">
+              <span class="w-2 h-2 rounded-full bg-violet-400 shrink-0"></span>
+              <span class="text-zinc-500 text-[11px] md:text-xs">T</span>
+              <span class="text-white font-semibold tabular-nums text-xs md:text-sm">{{ totalTypeCalories.dinner }}</span>
             </div>
           </div>
         </div>
-        <div class="mt-3 h-2 bg-white/8 rounded-full overflow-hidden">
+        <div class="mt-3 h-[6px] md:h-2 bg-white/8 rounded-full overflow-hidden">
           <div class="h-full rounded-full transition-all duration-700 bar-gradient" :style="{ width: Math.min((totalWeekCalories / WEEK_TARGET) * 100, 100) + '%' }"></div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7 gap-5 relative z-10">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7 gap-3 md:gap-5 relative z-10">
         <DayCard
           v-for="(day, index) in weekPlan"
           :key="day.day + '-' + (day.breakfast?.id || index)"
@@ -68,25 +68,25 @@
         />
       </div>
 
-      <div class="mt-16 py-6 border-t border-white/8 text-center text-zinc-600 text-xs relative z-10" data-html2canvas-ignore>
-        <p class="mb-1">Designed with <span class="text-white hover:text-pink-400 font-semibold transition-colors duration-300">mtdes23</span></p>
-        <a href="https://www.mtdes23.id.vn" target="_blank" class="hover:text-zinc-400 tracking-wide transition-colors duration-300">www.mtdes23.id.vn</a>
+      <div class="mt-12 md:mt-16 py-5 md:py-6 border-t border-white/8 text-center text-zinc-600 text-[11px] md:text-xs relative z-10" data-html2canvas-ignore>
+        <p class="mb-1">Designed with <span class="text-white font-semibold">mtdes23</span></p>
+        <a href="https://www.mtdes23.id.vn" target="_blank" class="hover:text-zinc-400 tracking-wide transition-colors">www.mtdes23.id.vn</a>
       </div>
     </div>
 
-    <TransitionGroup name="toast" tag="div" class="fixed top-4 right-4 z-50 space-y-2" data-html2canvas-ignore>
+    <TransitionGroup name="toast" tag="div" class="fixed left-3 right-3 sm:left-auto sm:right-4 top-4 z-50 space-y-2 max-w-[360px] mx-auto sm:mx-0" data-html2canvas-ignore>
       <div v-for="toast in toasts" :key="toast.id"
-        class="glass-card-strong rounded-2xl px-5 py-3 text-sm text-white flex items-center gap-3 shadow-2xl min-w-[200px]">
-        <CheckCircle v-if="toast.type === 'success'" class="w-4 h-4 text-emerald-400 shrink-0" />
-        <span>{{ toast.message }}</span>
+        class="glass-card-strong rounded-2xl px-4 md:px-5 py-3 text-sm text-white flex items-center gap-3 shadow-2xl">
+        <CheckCircle v-if="toast.type === 'success'" class="w-[18px] h-[18px] text-emerald-400 shrink-0" />
+        <span class="text-[13px] md:text-sm">{{ toast.message }}</span>
       </div>
     </TransitionGroup>
 
     <Transition name="fab">
       <button v-if="showScrollTop" @click="scrollToTop"
-        class="fixed bottom-6 right-6 z-40 glass-button p-3 rounded-full text-zinc-400 hover:text-white hover:border-white/40 shadow-2xl cursor-pointer"
+        class="fixed bottom-6 right-4 md:right-6 z-40 glass-button min-w-[48px] min-h-[48px] flex items-center justify-center rounded-full text-zinc-400 hover:text-white active:text-white shadow-2xl cursor-pointer active:scale-90"
         data-html2canvas-ignore aria-label="Lên đầu trang">
-        <ChevronUp class="w-5 h-5" />
+        <ChevronUp class="w-[22px] h-[22px]" />
       </button>
     </Transition>
   </div>
@@ -142,8 +142,8 @@ const downloadImage = async () => {
     link.href = dataUrl;
     link.click();
     showToast('Đã lưu ảnh thành công!');
-  } catch (error) {
-    showToast('Lỗi khi lưu ảnh', 'error');
+  } catch {
+    showToast('Lỗi khi lưu ảnh');
   }
 };
 
@@ -184,7 +184,7 @@ onMounted(() => {
   } else {
     generateNewWeek();
   }
-  window.addEventListener('scroll', handleScroll);
+  window.addEventListener('scroll', handleScroll, { passive: true });
 });
 
 onBeforeUnmount(() => {

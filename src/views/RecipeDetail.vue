@@ -1,46 +1,49 @@
 <template>
-  <div class="w-full min-h-screen max-w-4xl mx-auto py-10 px-4 sm:px-6 lg:px-8 relative">
-    <button @click="$router.push('/')" class="glass-button flex items-center gap-2 px-4 py-2 rounded-xl text-zinc-400 hover:text-white mb-8 group transition-all cursor-pointer">
-      <ArrowLeft class="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-      Quay lại
+  <div class="w-full min-h-screen max-w-4xl mx-auto py-6 md:py-10 px-3 sm:px-6 lg:px-8 relative">
+    <button @click="$router.push('/')" class="glass-button flex items-center gap-2 px-4 md:px-4 min-h-[44px] rounded-xl text-zinc-400 hover:text-white active:text-white mb-6 md:mb-8 transition-all cursor-pointer active:scale-95">
+      <ArrowLeft class="w-[18px] h-[18px]" />
+      <span class="text-sm">Quay lại</span>
     </button>
 
-    <div v-if="!meal" class="glass-card rounded-3xl p-12 text-center">
-      <p class="text-zinc-400 text-lg">Món này không tồn tại 🤔</p>
+    <div v-if="!meal" class="glass-card rounded-3xl p-8 md:p-12 text-center">
+      <p class="text-zinc-400 text-base md:text-lg">Món này không tồn tại 🤔</p>
     </div>
 
     <Transition v-else name="detail" mode="out-in">
-      <div class="glass-card rounded-3xl p-6 md:p-8 relative overflow-hidden" key="detail">
+      <div class="glass-card rounded-2xl md:rounded-3xl p-5 md:p-8 relative overflow-hidden" key="detail">
         <div class="absolute top-0 right-0 w-48 h-48 opacity-[0.04] rounded-full blur-3xl pointer-events-none" :style="{ background: mealTypeColor }"></div>
 
         <div class="relative z-20">
-          <div class="flex flex-wrap items-center gap-2 mb-5">
-            <span v-if="mealTypeBadge" class="px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-widest border" :class="mealTypeBadge.class">
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <span v-if="mealTypeBadge" class="px-3 py-1.5 rounded-full text-[10px] font-semibold uppercase tracking-widest border min-h-[28px]" :class="mealTypeBadge.class">
               {{ mealTypeBadge.label }}
             </span>
-            <span class="px-3 py-1 rounded-full text-[10px] font-semibold border flex items-center gap-1" :style="{ borderColor: mealTypeColor + '40', color: mealTypeColor, background: mealTypeColor + '15' }">
+            <span class="px-3 py-1.5 rounded-full text-[10px] font-semibold border flex items-center gap-1 min-h-[28px]" :style="{ borderColor: mealTypeColor + '40', color: mealTypeColor, background: mealTypeColor + '15' }">
               <Flame class="w-3 h-3" /> {{ meal.calories }} kcal
             </span>
           </div>
 
-          <h1 class="text-2xl md:text-4xl font-bold text-white mb-3 tracking-tight leading-tight">
+          <h1 class="text-xl md:text-4xl font-bold text-white mb-3 tracking-tight leading-tight">
             {{ meal.name }}
           </h1>
 
-          <p class="text-xs text-zinc-500 mb-8 flex items-center gap-1">
-            <Clock class="w-3 h-3" /> Khoảng 15-20 phút &middot; 
-            <Award class="w-3 h-3 ml-1" /> Dễ
+          <p class="text-[11px] md:text-xs text-zinc-500 mb-6 md:mb-8 flex items-center gap-1">
+            <Clock class="w-[14px] h-[14px]" /> Khoảng 15-20 phút &middot;
+            <Award class="w-[14px] h-[14px] ml-1" /> Dễ
           </p>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-10">
             <div>
-              <h3 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
-                <ShoppingBasket class="w-4 h-4" :style="{ color: mealTypeColor }" /> Nguyên Liệu <span class="text-zinc-500 font-normal text-xs">(1 khẩu phần)</span>
+              <h3 class="text-sm md:text-base font-semibold text-white mb-3 md:mb-4 flex items-center gap-2">
+                <ShoppingBasket class="w-4 h-4" :style="{ color: mealTypeColor }" /> Nguyên Liệu <span class="text-zinc-500 font-normal text-[11px] md:text-xs">(1 khẩu phần)</span>
               </h3>
               <ul class="space-y-2">
                 <li v-for="(item, idx) in recipe?.ingredients || defaultRecipe.ingredients" :key="'ing-'+idx"
-                  :class="['flex gap-3 text-zinc-300 p-3 rounded-xl border border-white/5 transition-all duration-300 cursor-pointer hover:bg-white/5', checkedIngredients.has(idx) ? 'bg-white/5' : 'bg-white/[0.02]']"
-                  @click="toggleIngredient(idx)">
+                  role="button"
+                  :tabindex="0"
+                  @keydown.enter="toggleIngredient(idx)"
+                  @click="toggleIngredient(idx)"
+                  :class="['flex gap-3 text-zinc-300 p-3.5 md:p-3 rounded-xl border border-white/5 transition-all duration-300 cursor-pointer active:scale-[0.98]', checkedIngredients.has(idx) ? 'bg-white/5' : 'bg-white/[0.02]']">
                   <div :class="['w-5 h-5 rounded-md border flex items-center justify-center shrink-0 mt-0.5 transition-all duration-300', checkedIngredients.has(idx) ? 'text-white' : 'border-white/20']"
                     :style="checkedIngredients.has(idx) ? { background: mealTypeColor, borderColor: mealTypeColor } : {}">
                     <Check v-if="checkedIngredients.has(idx)" class="w-3 h-3" />
@@ -51,13 +54,13 @@
             </div>
 
             <div>
-              <h3 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
+              <h3 class="text-sm md:text-base font-semibold text-white mb-3 md:mb-4 flex items-center gap-2">
                 <ChefHat class="w-4 h-4" :style="{ color: mealTypeColor }" /> Cách Làm
               </h3>
-              <div class="space-y-5">
-                <div v-for="(step, idx) in recipe?.steps || defaultRecipe.steps" :key="'step-'+idx" class="flex gap-4">
+              <div class="space-y-4 md:space-y-5">
+                <div v-for="(step, idx) in recipe?.steps || defaultRecipe.steps" :key="'step-'+idx" class="flex gap-3 md:gap-4">
                   <div class="flex flex-col items-center">
-                    <div class="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-xs shrink-0 border transition-all duration-300"
+                    <div class="w-7 h-7 rounded-full flex items-center justify-center text-white font-bold text-[11px] shrink-0 border transition-all duration-300"
                       :style="currentStep >= idx ? { background: mealTypeColor, borderColor: mealTypeColor } : { background: 'rgba(255,255,255,0.05)', borderColor: 'rgba(255,255,255,0.15)' }">
                       {{ idx + 1 }}
                     </div>
@@ -65,8 +68,8 @@
                       class="w-px flex-1 my-1.5 transition-all duration-500"
                       :style="{ background: currentStep > idx ? mealTypeColor + '60' : 'rgba(255,255,255,0.08)' }"></div>
                   </div>
-                  <div class="pt-0.5 pb-2">
-                    <p class="text-zinc-300 text-sm leading-relaxed" @click="currentStep = idx">{{ step }}</p>
+                  <div class="pt-0.5 pb-2" @click="currentStep = idx">
+                    <p class="text-zinc-300 text-sm leading-relaxed">{{ step }}</p>
                   </div>
                 </div>
               </div>
