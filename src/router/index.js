@@ -1,25 +1,35 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import WeeklyMenu from '../components/WeeklyMenu.vue'
-import RecipeDetail from '../views/RecipeDetail.vue'
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: WeeklyMenu
-    },
-    {
-      path: '/recipe/:id',
-      name: 'recipe',
-      component: RecipeDetail,
-      props: true
-    }
-  ],
-  scrollBehavior(to, from, savedPosition) {
-    return { top: 0 }
+const routes = [
+  {
+    path: '/',
+    name: 'home',
+    meta: { tab: 'menu', title: 'Eat Clean Menu' },
+    component: () => import('../views/WeeklyMenu.vue')
+  },
+  {
+    path: '/meals',
+    name: 'meals',
+    meta: { tab: 'meals', title: 'Tất cả Món ăn' },
+    component: () => import('../views/AllMeals.vue')
+  },
+  {
+    path: '/about',
+    name: 'about',
+    meta: { tab: 'about', title: 'Giới thiệu' },
+    component: () => import('../views/About.vue')
+  },
+  {
+    path: '/recipe/:id',
+    name: 'recipe',
+    meta: { tab: null, title: 'Công thức' },
+    component: () => import('../views/RecipeDetail.vue'),
+    props: true
   }
-})
+]
 
-export default router
+export default createRouter({
+  history: createWebHistory(),
+  routes,
+  scrollBehavior: () => ({ top: 0 })
+})

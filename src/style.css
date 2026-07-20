@@ -1,177 +1,72 @@
 @import "tailwindcss";
 
 :root {
-    --macos-bg: #000000;
-    --card-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-    --card-border: rgba(255, 255, 255, 0.15);
-    --card-border-top: rgba(255, 255, 255, 0.3);
-    --text-primary: #ffffff;
-    --text-secondary: #a1a1aa;
-    --shadow-sm: inset 0 1.5px 1px rgba(255, 255, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.15);
-    --shadow-md: inset 0 1.5px 1px rgba(255, 255, 255, 0.2), 0 12px 30px rgba(0, 0, 0, 0.25);
-    --blur: saturate(200%) blur(50px);
-    --font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  --font: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
 }
 
-* {
-    -webkit-tap-highlight-color: transparent;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.1) transparent;
-}
-
+* { -webkit-tap-highlight-color: transparent; }
 html { overscroll-behavior: none; }
-
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
-
 ::selection { background: rgba(139, 92, 246, 0.3); color: #fff; }
 
 body {
-    font-family: var(--font-family);
-    background-color: var(--macos-bg);
-    color: var(--text-primary);
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    background-image: radial-gradient(circle at 50% 0%, #1a1a2e 0%, #000000 70%);
-    background-attachment: fixed;
-    overflow-x: hidden;
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-}
-
-.glass-card {
-    background: var(--card-bg);
-    backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
-    border: 1px solid var(--card-border);
-    border-top: 1px solid var(--card-border-top);
-    box-shadow: var(--shadow-md);
-}
-
-.glass-card-strong {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
-    backdrop-filter: var(--blur);
-    -webkit-backdrop-filter: var(--blur);
-    border: 1px solid var(--card-border);
-    border-top: 1px solid var(--card-border-top);
-    box-shadow: var(--shadow-md);
-}
-
-.glass-button {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-.glass-button:active:not(:disabled) {
-    transform: scale(0.97);
-}
-
-.glass-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-@media (hover: hover) {
-    .glass-button:hover:not(:disabled) {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-    }
-}
-
-.light-sweep {
-    position: relative;
-    overflow: hidden;
-}
-.light-sweep::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
-    transform: skewX(-25deg);
-    animation: lightSweep 6s infinite cubic-bezier(0.25, 0.8, 0.25, 1);
-    pointer-events: none;
-    z-index: 10;
-}
-@keyframes lightSweep {
-    0% { left: -100%; }
-    15% { left: 200%; }
-    100% { left: 200%; }
+  font-family: var(--font);
+  background: #000;
+  color: #fff;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  overflow-x: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
-.animate-fade-up {
-    opacity: 0;
-    transform: translateY(24px);
-    animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.glass {
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%);
+  backdrop-filter: saturate(180%) blur(40px);
+  -webkit-backdrop-filter: saturate(180%) blur(40px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.2);
 }
+
+.glass-strong {
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+  backdrop-filter: saturate(180%) blur(40px);
+  -webkit-backdrop-filter: saturate(180%) blur(40px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  user-select: none;
+}
+.btn:active { transform: scale(0.96); }
+@media (hover: hover) {
+  .btn:hover { background: rgba(255,255,255,0.15); }
+}
+
+.tab-active {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
 @keyframes fadeUp {
-    to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
+.anim-fade { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-.meal-card-amber {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
-    border-left: 2px solid rgba(245, 158, 11, 0.4);
-}
-@media (hover: hover) {
-    .meal-card-amber:hover {
-        background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-        border-left-color: rgba(245, 158, 11, 0.7);
-        box-shadow: 0 0 24px rgba(245, 158, 11, 0.08);
-    }
-}
-
-.meal-card-emerald {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
-    border-left: 2px solid rgba(16, 185, 129, 0.4);
-}
-@media (hover: hover) {
-    .meal-card-emerald:hover {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-        border-left-color: rgba(16, 185, 129, 0.7);
-        box-shadow: 0 0 24px rgba(16, 185, 129, 0.08);
-    }
-}
-
-.meal-card-violet {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
-    border-left: 2px solid rgba(139, 92, 246, 0.4);
-}
-@media (hover: hover) {
-    .meal-card-violet:hover {
-        background: linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-        border-left-color: rgba(139, 92, 246, 0.7);
-        box-shadow: 0 0 24px rgba(139, 92, 246, 0.08);
-    }
-}
-
+.meal-amber { background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, transparent 100%); }
+.meal-emerald { background: linear-gradient(135deg, rgba(16,185,129,0.06) 0%, transparent 100%); }
+.meal-violet { background: linear-gradient(135deg, rgba(139,92,246,0.06) 0%, transparent 100%); }
 .bar-amber { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
 .bar-emerald { background: linear-gradient(90deg, #10b981, #34d399); }
 .bar-violet { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
 .bar-gradient { background: linear-gradient(90deg, #f59e0b, #10b981, #8b5cf6); }
-
-@layer utilities {
-  .text-gradient {
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-image: linear-gradient(to right, #ffffff, #a1a1aa);
-  }
-}
