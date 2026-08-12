@@ -1,5 +1,7 @@
 import { prisma } from "../../lib/prisma";
 
+export const dynamic = "force-dynamic";
+
 export default async function MealsApiPage() {
   const meals = await prisma.meal.findMany({ orderBy: { type: "asc" } });
 
