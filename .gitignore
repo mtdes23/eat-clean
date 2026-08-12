@@ -7,3 +7,5 @@ prisma/*.db
 prisma/*.db-journal
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-const { clearSession } = require("../../lib/auth");
+const { clearSession } = require("../../../lib/auth");
 
 export async function POST() {
   clearSession();
