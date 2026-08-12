@@ -23,7 +23,12 @@
     </div>
 
     <div class="space-y-1.5 relative z-10">
-      <MealItem v-for="m in meals" :key="m.type" :meal="m" @refresh="$emit('refresh-meal', m.type)" />
+      <MealItem v-for="m in meals" :key="m.type" :meal="m"
+        :locked="isLocked(index, m.type)"
+        :favorited="isFavorite(m.data.id)"
+        @refresh="$emit('refresh-meal', m.type)"
+        @toggle-lock="$emit('toggle-lock', m.type)"
+        @toggle-favorite="toggleFav(m.data.id)" />
     </div>
   </div>
 </template>
@@ -32,11 +37,14 @@
 import { computed } from 'vue'
 import MealItem from './MealItem.vue'
 import { RefreshCw } from 'lucide-vue-next'
+import { useStore } from '../composables/useStore'
+
+const { isFavorite, toggleFavorite, isLocked } = useStore()
 
 const props = defineProps({
   day: Object, index: Number
 })
-defineEmits(['refresh', 'refresh-meal'])
+defineEmits(['refresh', 'refresh-meal', 'toggle-lock'])
 
 const COLORS = { 'Thứ 2': '#f43f5e', 'Thứ 3': '#0ea5e9', 'Thứ 4': '#10b981', 'Thứ 5': '#8b5cf6', 'Thứ 6': '#f59e0b', 'Thứ 7': '#ec4899', 'Chủ Nhật': '#14b8a6' }
 const accent = computed(() => COLORS[props.day.day] || '#fff')
@@ -53,4 +61,6 @@ const meals = computed(() => [
   { type: 'lunch', label: 'BỮA TRƯA', data: props.day.lunch, color: '#10b981', dot: 'bg-emerald-400', card: 'meal-emerald', bar: 'bar-emerald' },
   { type: 'dinner', label: 'BỮA TỐI', data: props.day.dinner, color: '#8b5cf6', dot: 'bg-violet-400', card: 'meal-violet', bar: 'bar-violet' }
 ])
+
+const toggleFav = (id) => toggleFavorite(id)
 </script>

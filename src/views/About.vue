@@ -5,10 +5,48 @@
         🥗
       </div>
       <h2 class="text-xl font-bold mb-1">Eat Clean Menu</h2>
-      <p class="text-zinc-500 text-sm mb-4">Phiên bản 1.0</p>
+      <p class="text-zinc-500 text-sm mb-4">Phiên bản 2.0</p>
       <p class="text-zinc-400 text-sm leading-relaxed max-w-xs mx-auto">
         Ứng dụng gợi ý thực đơn Eat Clean hàng tuần với 27 món ăn healthy, giúp bạn dễ dàng lên kế hoạch bữa ăn lành mạnh.
       </p>
+    </div>
+
+    <div class="glass rounded-2xl p-4 mb-4">
+      <h3 class="text-sm font-bold mb-3">Tính năng mới</h3>
+      <div class="space-y-2">
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-emerald-400/5">
+          <ShoppingCart class="w-4 h-4 text-emerald-400" />
+          <span class="text-sm text-white/80">Danh sách mua sắm thông minh</span>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-amber-400/5">
+          <Search class="w-4 h-4 text-amber-400" />
+          <span class="text-sm text-white/80">Tìm kiếm & lọc món ăn</span>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-rose-400/5">
+          <Heart class="w-4 h-4 text-rose-400" />
+          <span class="text-sm text-white/80">Món yêu thích & ưu tiên random</span>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-violet-400/5">
+          <Lock class="w-4 h-4 text-violet-400" />
+          <span class="text-sm text-white/80">Khóa món trong thực đơn</span>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-sky-400/5">
+          <Target class="w-4 h-4 text-sky-400" />
+          <span class="text-sm text-white/80">Mục tiêu calo tùy chỉnh</span>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-orange-400/5">
+          <Users class="w-4 h-4 text-orange-400" />
+          <span class="text-sm text-white/80">Điều chỉnh khẩu phần</span>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-teal-400/5">
+          <Timer class="w-4 h-4 text-teal-400" />
+          <span class="text-sm text-white/80">Bộ đếm thời gian nấu</span>
+        </div>
+        <div class="flex items-center gap-3 p-2 rounded-lg bg-pink-400/5">
+          <Sun class="w-4 h-4 text-pink-400" />
+          <span class="text-sm text-white/80">Chế độ Sáng / Tối</span>
+        </div>
+      </div>
     </div>
 
     <div class="glass rounded-2xl p-4 space-y-3">
@@ -42,4 +80,5 @@
 
 <script setup>
 import AppLayout from '../components/AppLayout.vue'
+import { ShoppingCart, Search, Heart, Lock, Target, Users, Timer, Sun } from 'lucide-vue-next'
 </script>

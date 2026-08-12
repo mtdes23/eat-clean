@@ -5,7 +5,11 @@
         <button @click="$router.back()" class="btn min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl text-zinc-400 active:text-white" aria-label="Quay lại">
           <ArrowLeft class="w-5 h-5" />
         </button>
-        <h1 class="text-lg font-bold tracking-tight truncate">{{ meal?.name }}</h1>
+        <h1 class="text-lg font-bold tracking-tight truncate flex-1">{{ meal?.name }}</h1>
+        <button @click="toggleFav" class="btn min-w-[40px] min-h-[40px] flex items-center justify-center rounded-xl"
+          :class="favorited ? 'text-amber-400' : 'text-zinc-400'">
+          <Heart class="w-5 h-5" :fill="favorited ? 'currentColor' : 'none'" />
+        </button>
       </div>
     </header>
 
@@ -36,6 +40,33 @@
         </div>
       </div>
 
+      <div class="glass rounded-2xl p-4 mb-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <Users class="w-4 h-4 text-zinc-400" />
+            <span class="text-sm font-medium">Điều chỉnh khẩu phần</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button @click="servingsAdj = Math.max(1, servingsAdj - 1)"
+              class="btn min-w-[32px] min-h-[32px] flex items-center justify-center rounded-lg text-zinc-400 active:text-white">
+              <Minus class="w-4 h-4" />
+            </button>
+            <span class="text-sm font-bold tabular-nums w-6 text-center">{{ servingsAdj }}</span>
+            <button @click="servingsAdj++"
+              class="btn min-w-[32px] min-h-[32px] flex items-center justify-center rounded-lg text-zinc-400 active:text-white">
+              <Plus class="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+        <p v-if="servingsAdj !== 1" class="text-[11px] text-zinc-500 mt-2">Nguyên liệu x{{ servingsAdj }}</p>
+      </div>
+
+      <div class="flex gap-2 mb-4">
+        <button @click="showTimer = true; timerLabel = 'Nấu ăn'" class="btn flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white flex-1 active:scale-95">
+          <Timer class="w-4 h-4" /> Bắt đầu nấu
+        </button>
+      </div>
+
       <section class="mb-6">
         <h2 class="font-bold text-base mb-3 flex items-center gap-2">
           <FileText class="w-4 h-4" :style="{ color: typeInfo.color }" />
@@ -52,7 +83,7 @@
               <Check v-if="ingChecked(i)" class="w-3 h-3 text-white" />
             </div>
             <span class="text-sm transition-all duration-200" :class="ingChecked(i) ? 'text-zinc-500 line-through' : 'text-white/90'">
-              {{ ing }}
+              {{ scaleIngredient(ing) }}
             </span>
           </div>
         </div>
@@ -81,6 +112,8 @@
         </div>
       </section>
     </main>
+
+    <CookingTimer :show="showTimer" :duration="parseTimerDuration()" :label="timerLabel" @close="showTimer = false" @finish="onTimerFinish" />
   </div>
 </template>
 
@@ -89,16 +122,24 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { breakfasts, lunches, dinners } from '../data/meals'
 import { recipes } from '../data/recipes'
-import { ArrowLeft, Flame, Clock, Users, FileText, ListOrdered, Check } from 'lucide-vue-next'
+import { useStore } from '../composables/useStore'
+import CookingTimer from '../components/CookingTimer.vue'
+import { ArrowLeft, Flame, Clock, Users, FileText, ListOrdered, Check, Heart, Timer, Minus, Plus } from 'lucide-vue-next'
 
 const route = useRoute()
+const { isFavorite, toggleFavorite } = useStore()
 const checkedIng = ref([])
 const checkedStep = ref([])
+const servingsAdj = ref(1)
+const showTimer = ref(false)
+const timerLabel = ref('Nấu ăn')
 
 const allMeals = [...breakfasts, ...lunches, ...dinners]
 const meal = computed(() => allMeals.find(m => m.id === route.params.id))
-
 const recipe = computed(() => recipes[route.params.id] || { time: '—', servings: '—', ingredients: [], steps: [] })
+const favorited = computed(() => isFavorite(route.params.id))
+
+const toggleFav = () => toggleFavorite(route.params.id)
 
 const typeInfo = computed(() => {
   if (breakfasts.some(m => m.id === route.params.id)) return { color: '#f59e0b', label: 'BỮA SÁNG', icon: '🌅', bg: 'bg-amber-400/10' }
@@ -110,6 +151,31 @@ const ingChecked = (i) => checkedIng.value.includes(i)
 const stepChecked = (i) => checkedStep.value.includes(i)
 const toggleIng = (i) => { checkedIng.value = checkedIng.value.includes(i) ? checkedIng.value.filter(x => x !== i) : [...checkedIng.value, i] }
 const toggleStep = (i) => { checkedStep.value = checkedStep.value.includes(i) ? checkedStep.value.filter(x => x !== i) : [...checkedStep.value, i] }
+
+const scaleIngredient = (ing) => {
+  if (servingsAdj.value === 1) return ing
+  const match = ing.match(/^(\d+(?:\.\d+)?)/)
+  if (match) {
+    const num = parseFloat(match[1])
+    const scaled = num * servingsAdj.value
+    const formatted = scaled % 1 === 0 ? scaled : scaled.toFixed(1)
+    return ing.replace(match[1], formatted)
+  }
+  return ing
+}
+
+const parseTimerDuration = () => {
+  const timeStr = recipe.value.time || ''
+  const match = timeStr.match(/(\d+)/)
+  return match ? parseInt(match[1]) * 60 : 600
+}
+
+const onTimerFinish = () => {
+  if ('Notification' in window && Notification.permission === 'granted') {
+    new Notification('Món ăn đã sẵn sàng!', { body: meal.value?.name })
+  }
+  showTimer.value = false
+}
 </script>
 
 <style scoped>

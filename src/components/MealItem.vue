@@ -8,6 +8,7 @@
       <div class="flex items-center gap-1.5 mb-0.5">
         <span class="w-1.5 h-1.5 rounded-full" :class="meal.dot"></span>
         <span class="text-[9px] font-semibold uppercase tracking-wider" :style="{ color: meal.color }">{{ meal.label }}</span>
+        <Lock v-if="locked" class="w-2.5 h-2.5 text-zinc-500" />
       </div>
       <p class="text-sm font-medium text-white/90 truncate">{{ meal.data.name }}</p>
       <div class="flex items-center gap-2 mt-0.5">
@@ -19,6 +20,18 @@
         </div>
       </div>
     </div>
+    <div class="flex flex-col gap-1 shrink-0" @click.stop>
+      <button @click="$emit('toggle-favorite')"
+        class="btn min-w-[32px] min-h-[32px] flex items-center justify-center rounded-lg transition-all"
+        :class="favorited ? 'text-amber-400' : 'text-zinc-600 active:text-amber-400'" aria-label="Yêu thích">
+        <Heart class="w-3.5 h-3.5" :fill="favorited ? 'currentColor' : 'none'" />
+      </button>
+      <button @click="$emit('toggle-lock')"
+        class="btn min-w-[32px] min-h-[32px] flex items-center justify-center rounded-lg transition-all"
+        :class="locked ? 'text-emerald-400' : 'text-zinc-600 active:text-emerald-400'" aria-label="Khóa">
+        <Lock class="w-3.5 h-3.5" />
+      </button>
+    </div>
     <button @click.stop="$emit('refresh')" class="btn min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg text-zinc-500 active:text-white shrink-0" aria-label="Đổi">
       <RefreshCw class="w-[14px] h-[14px]" />
     </button>
@@ -26,8 +39,8 @@
 </template>
 
 <script setup>
-import { RefreshCw, Flame } from 'lucide-vue-next'
+import { RefreshCw, Flame, Heart, Lock } from 'lucide-vue-next'
 
-defineProps({ meal: Object })
-defineEmits(['refresh'])
+defineProps({ meal: Object, locked: Boolean, favorited: Boolean })
+defineEmits(['refresh', 'toggle-favorite', 'toggle-lock'])
 </script>

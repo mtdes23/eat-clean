@@ -14,6 +14,12 @@ const routes = [
     component: () => import('../views/AllMeals.vue')
   },
   {
+    path: '/shopping',
+    name: 'shopping',
+    meta: { tab: null, title: 'Mua sắm' },
+    component: () => import('../views/ShoppingList.vue')
+  },
+  {
     path: '/about',
     name: 'about',
     meta: { tab: 'about', title: 'Giới thiệu' },

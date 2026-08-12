@@ -38,19 +38,31 @@ export const dinners = [
 // Helper functon to get a random item from an array
 export const getRandomItem = (array, excludeId = null) => {
   let filtered = excludeId ? array.filter(item => item.id !== excludeId) : array;
-  if (filtered.length === 0) filtered = array; // fallback
+  if (filtered.length === 0) filtered = array;
   const randomIndex = Math.floor(Math.random() * filtered.length);
   return filtered[randomIndex];
 };
 
-export const generateWeeklyMenu = () => {
+export const getRandomItemWithFavorites = (array, favorites = [], excludeId = null) => {
+  let pool = array
+  if (excludeId) pool = pool.filter(item => item.id !== excludeId)
+  if (pool.length === 0) pool = array
+
+  const favPool = pool.filter(item => favorites.includes(item.id))
+  if (favPool.length > 0 && Math.random() < 0.6) {
+    return favPool[Math.floor(Math.random() * favPool.length)]
+  }
+  return pool[Math.floor(Math.random() * pool.length)]
+};
+
+export const generateWeeklyMenu = (locked = {}, favorites = []) => {
   const daysOfWeek = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'];
-  return daysOfWeek.map((day) => {
+  return daysOfWeek.map((day, i) => {
     return {
       day,
-      breakfast: getRandomItem(breakfasts),
-      lunch: getRandomItem(lunches),
-      dinner: getRandomItem(dinners),
+      breakfast: locked[i]?.breakfast || getRandomItemWithFavorites(breakfasts, favorites),
+      lunch: locked[i]?.lunch || getRandomItemWithFavorites(lunches, favorites),
+      dinner: locked[i]?.dinner || getRandomItemWithFavorites(dinners, favorites),
     };
   });
 };
