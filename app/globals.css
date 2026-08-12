@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
-@theme {
-  --color-glass: rgba(255, 255, 255, 0.05);
-  --color-glass-strong: rgba(255, 255, 255, 0.1);
-  --color-glass-border: rgba(255, 255, 255, 0.08);
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg-strong: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 * {
@@ -18,14 +18,14 @@ body {
 }
 
 .glass {
-  background: var(--color-glass);
-  border: 1px solid var(--color-glass-border);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   backdrop-filter: blur(20px) saturate(1.8);
   -webkit-backdrop-filter: blur(20px) saturate(1.8);
 }
 
 .glass-strong {
-  background: var(--color-glass-strong);
+  background: var(--glass-bg-strong);
   border: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(40px) saturate(2);
   -webkit-backdrop-filter: blur(40px) saturate(2);
