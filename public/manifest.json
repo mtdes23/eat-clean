@@ -1,20 +1,16 @@
 {
-  "name": "Eat Clean Menu",
+  "name": "Eat Clean",
   "short_name": "EatClean",
-  "description": "Thực đơn eat clean ngẫu nhiên nguyên tuần, xem công thức chi tiết",
+  "description": "Ung dung quan ly thuc don an sach",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
-  "orientation": "portrait-primary",
-  "scope": "/",
-  "categories": ["food", "health", "lifestyle"],
   "icons": [
     {
-      "src": "/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
     }
   ]
 }

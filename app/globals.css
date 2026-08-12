@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --color-glass: rgba(255, 255, 255, 0.05);
+  --color-glass-strong: rgba(255, 255, 255, 0.1);
+  --color-glass-border: rgba(255, 255, 255, 0.08);
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+.glass {
+  background: var(--color-glass);
+  border: 1px solid var(--color-glass-border);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+}
+
+.glass-strong {
+  background: var(--color-glass-strong);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(40px) saturate(2);
+  -webkit-backdrop-filter: blur(40px) saturate(2);
+}
+
+.btn {
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s;
+}
+.btn:hover { background: rgba(255,255,255,0.15); }
+.btn:active { transform: scale(0.97); }
+
+.bar-gradient {
+  background: linear-gradient(90deg, #f59e0b, #10b981, #8b5cf6);
+}
+
+.tab-active {
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.anim-fade {
+  animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade { animation: none; }
+}
+
+.meal-amber { border-left: 3px solid #f59e0b; }
+.meal-emerald { border-left: 3px solid #10b981; }
+.meal-violet { border-left: 3px solid #8b5cf6; }
