@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-const { prisma } = require("../../../lib/prisma");
+const { prisma } = require("../../../../lib/prisma");
 
 export async function GET() {
   const plans = await prisma.mealPlan.findMany({

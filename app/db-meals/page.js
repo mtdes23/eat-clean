@@ -1,4 +1,4 @@
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../../../lib/prisma";
 
 export default async function MealsApiPage() {
   const meals = await prisma.meal.findMany({ orderBy: { type: "asc" } });

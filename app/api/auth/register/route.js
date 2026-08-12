@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-const { register } = require("../../../lib/auth");
+const { register } = require("../../../../lib/auth");
 
 export async function POST(req) {
   try {
